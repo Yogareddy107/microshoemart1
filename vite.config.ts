@@ -15,17 +15,19 @@ const baseConfig = baseDefineConfig({
   vite: {
     resolve: {
       tsconfigPaths: true,
-    },
-    build: {
-      rollupOptions: {
-        output: {
-          manualChunks(id) {
-            if (id.includes("@tanstack")) {
-              return "tanstack-bundle";
-            }
-          },
-        },
-      },
+      dedupe: [
+        "react",
+        "react-dom",
+        "react/jsx-runtime",
+        "react/jsx-dev-runtime",
+        "@tanstack/react-query",
+        "@tanstack/query-core",
+        "@tanstack/react-router",
+        "@tanstack/react-start",
+        "@tanstack/start-client-core",
+        "@tanstack/start-server-core",
+        "@tanstack/history"
+      ]
     },
   },
 });
