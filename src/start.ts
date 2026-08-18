@@ -1,4 +1,5 @@
-import { createStart, createCsrfMiddleware, createMiddleware } from "@tanstack/react-start";
+import { createStart, createMiddleware } from "@tanstack/react-start";
+import { getRequest } from "@tanstack/react-start/server";
 
 import { renderErrorPage } from "./lib/error-page";
 import { attachSupabaseAuth } from "@/integrations/supabase/auth-attacher";
@@ -18,11 +19,36 @@ const errorMiddleware = createMiddleware().server(async ({ next }) => {
   }
 });
 
-// Start installs this automatically when src/start.ts is absent; defining the
-// file opts out, so re-add it explicitly to keep server functions protected
-// from cross-site requests.
-const csrfMiddleware = createCsrfMiddleware({
-  filter: (ctx) => ctx.handlerType === "serverFn",
+// Robust custom CSRF protection middleware that replaces createCsrfMiddleware
+// to bypass bundling resolution bugs on edge/serverless runtimes.
+const csrfMiddleware = createMiddleware().server(async ({ next }) => {
+  const request = getRequest();
+  if (request && request.method === "POST") {
+    const origin = request.headers.get("origin");
+    const referer = request.headers.get("referer");
+    const host = request.headers.get("x-forwarded-host") || request.headers.get("host");
+
+    if (origin) {
+      try {
+        const originUrl = new URL(origin);
+        if (originUrl.host !== host && !originUrl.host.endsWith(host || "")) {
+          return new Response("CSRF Validation Failed: Origin mismatch", { status: 403 });
+        }
+      } catch {
+        return new Response("CSRF Validation Failed: Invalid origin", { status: 403 });
+      }
+    } else if (referer) {
+      try {
+        const refererUrl = new URL(referer);
+        if (refererUrl.host !== host && !refererUrl.host.endsWith(host || "")) {
+          return new Response("CSRF Validation Failed: Referer mismatch", { status: 403 });
+        }
+      } catch {
+        return new Response("CSRF Validation Failed: Invalid referer", { status: 403 });
+      }
+    }
+  }
+  return next();
 });
 
 export const startInstance = createStart(() => ({
