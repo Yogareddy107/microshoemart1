@@ -3,7 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { orderCodeSchema, placeOrderSchema } from "./schemas";
 
 export const placeOrder = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => placeOrderSchema.parse(input))
+  .validator((input: unknown) => placeOrderSchema.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
@@ -56,7 +56,7 @@ export const placeOrder = createServerFn({ method: "POST" })
   });
 
 export const getOrderByCode = createServerFn({ method: "GET" })
-  .inputValidator((input: unknown) => orderCodeSchema.parse(input))
+  .validator((input: unknown) => orderCodeSchema.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: order, error } = await supabaseAdmin

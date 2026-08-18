@@ -13,7 +13,7 @@ import {
 } from "./schemas";
 
 export const adminLogin = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => pinSchema.parse(input))
+  .validator((input: unknown) => pinSchema.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { issueAdminToken } = await import("./admin-session.server");
@@ -37,14 +37,14 @@ export const adminLogin = createServerFn({ method: "POST" })
   });
 
 export const adminVerify = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => tokenSchema.parse(input))
+  .validator((input: unknown) => tokenSchema.parse(input))
   .handler(async ({ data }) => {
     const { isValidAdminToken } = await import("./admin-session.server");
     return { ok: isValidAdminToken(data.token) };
   });
 
 export const adminOverview = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => tokenSchema.parse(input))
+  .validator((input: unknown) => tokenSchema.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { requireAdmin } = await import("./admin-session.server");
@@ -97,7 +97,7 @@ export const adminOverview = createServerFn({ method: "POST" })
   });
 
 export const adminListProducts = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => tokenSchema.parse(input))
+  .validator((input: unknown) => tokenSchema.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { requireAdmin } = await import("./admin-session.server");
@@ -112,7 +112,7 @@ export const adminListProducts = createServerFn({ method: "POST" })
   });
 
 export const adminListCategories = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => tokenSchema.parse(input))
+  .validator((input: unknown) => tokenSchema.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { requireAdmin } = await import("./admin-session.server");
@@ -127,7 +127,7 @@ export const adminListCategories = createServerFn({ method: "POST" })
   });
 
 export const adminListAdvertisements = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => tokenSchema.parse(input))
+  .validator((input: unknown) => tokenSchema.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { requireAdmin } = await import("./admin-session.server");
@@ -142,7 +142,7 @@ export const adminListAdvertisements = createServerFn({ method: "POST" })
   });
 
 export const adminListOrders = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => tokenSchema.parse(input))
+  .validator((input: unknown) => tokenSchema.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { requireAdmin } = await import("./admin-session.server");
@@ -157,7 +157,7 @@ export const adminListOrders = createServerFn({ method: "POST" })
   });
 
 export const adminGetSettings = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => tokenSchema.parse(input))
+  .validator((input: unknown) => tokenSchema.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { requireAdmin } = await import("./admin-session.server");
@@ -173,7 +173,7 @@ export const adminGetSettings = createServerFn({ method: "POST" })
   });
 
 export const adminSaveProduct = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => productInputSchema.parse(input))
+  .validator((input: unknown) => productInputSchema.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { requireAdmin } = await import("./admin-session.server");
@@ -201,7 +201,7 @@ export const adminSaveProduct = createServerFn({ method: "POST" })
   });
 
 export const adminDeleteProduct = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => deleteSchema.parse(input))
+  .validator((input: unknown) => deleteSchema.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { requireAdmin } = await import("./admin-session.server");
@@ -213,7 +213,7 @@ export const adminDeleteProduct = createServerFn({ method: "POST" })
   });
 
 export const adminSaveCategory = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => categoryInputSchema.parse(input))
+  .validator((input: unknown) => categoryInputSchema.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { requireAdmin } = await import("./admin-session.server");
@@ -237,7 +237,7 @@ export const adminSaveCategory = createServerFn({ method: "POST" })
   });
 
 export const adminDeleteCategory = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => deleteSchema.parse(input))
+  .validator((input: unknown) => deleteSchema.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { requireAdmin } = await import("./admin-session.server");
@@ -249,7 +249,7 @@ export const adminDeleteCategory = createServerFn({ method: "POST" })
   });
 
 export const adminSaveAdvertisement = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => advertisementInputSchema.parse(input))
+  .validator((input: unknown) => advertisementInputSchema.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { requireAdmin } = await import("./admin-session.server");
@@ -273,7 +273,7 @@ export const adminSaveAdvertisement = createServerFn({ method: "POST" })
   });
 
 export const adminDeleteAdvertisement = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => deleteSchema.parse(input))
+  .validator((input: unknown) => deleteSchema.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { requireAdmin } = await import("./admin-session.server");
@@ -285,7 +285,7 @@ export const adminDeleteAdvertisement = createServerFn({ method: "POST" })
   });
 
 export const adminUpdateOrderStatus = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => orderStatusSchema.parse(input))
+  .validator((input: unknown) => orderStatusSchema.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { requireAdmin } = await import("./admin-session.server");
@@ -300,7 +300,7 @@ export const adminUpdateOrderStatus = createServerFn({ method: "POST" })
   });
 
 export const adminSaveSettings = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => settingsInputSchema.parse(input))
+  .validator((input: unknown) => settingsInputSchema.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { requireAdmin } = await import("./admin-session.server");
@@ -318,7 +318,7 @@ export const adminSaveSettings = createServerFn({ method: "POST" })
   });
 
 export const adminUploadImage = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => uploadSchema.parse(input))
+  .validator((input: unknown) => uploadSchema.parse(input))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { requireAdmin } = await import("./admin-session.server");

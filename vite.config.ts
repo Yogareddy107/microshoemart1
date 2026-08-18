@@ -4,15 +4,18 @@
 //     nitro (build-only using cloudflare as a default target), VITE_* env injection, @ path alias,
 //     React/TanStack dedupe, error logger plugins, and sandbox detection (port/host/strictPort).
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
-import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+import { defineConfig as baseDefineConfig } from "@lovable.dev/vite-tanstack-config";
 
-export default defineConfig({
+const baseConfig = baseDefineConfig({
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this
     server: { entry: "server" },
   },
   vite: {
+    resolve: {
+      tsconfigPaths: true,
+    },
     build: {
       rollupOptions: {
         output: {
@@ -26,4 +29,17 @@ export default defineConfig({
     },
   },
 });
+
+export default async (env: any) => {
+  const config = await baseConfig(env);
+  if (config.plugins) {
+    config.plugins = config.plugins.filter((p: any) => {
+      if (p && typeof p === "object" && "name" in p && p.name === "vite-tsconfig-paths") {
+        return false;
+      }
+      return true;
+    });
+  }
+  return config;
+};
 
